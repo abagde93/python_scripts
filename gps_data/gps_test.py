@@ -1,5 +1,6 @@
 #! /usr/bin/python
 # Written by Dan Mandle http://dan.mandle.me September 2012
+# Edited by Ajinkya Bagde November 2016(for initial state use)
 # License: GPL 2.0
  
 import os
@@ -10,6 +11,8 @@ import time
 import threading
  
 gpsd = None #seting the global variable
+
+#creating streamer for initial state web api
 streamer = Streamer(bucket_name="GPS Tracker", bucket_key="GPS_Tracker_10262016", ini_file_location="./isstreamer.ini")
 
 
@@ -38,10 +41,13 @@ if __name__ == '__main__':
       #print gpsd.fix.latitude,', ',gpsd.fix.longitude,'  Time: ',gpsd.utc
  
       os.system('clear')
+
+      #streaming position and altitude readings to initial state web api
       streamer.log("Location", "{lat},{lon}".format(lat=gpsd.fix.latitude,lon=gpsd.fix.longitude))
       streamer.log("Altitude", "{value}".format(value=gpsd.fix.altitude))
       
  
+      #display gps readings for testing purposes
       print
       print ' GPS reading'
       print '----------------------------------------'
@@ -60,12 +66,6 @@ if __name__ == '__main__':
       print
       print 'sats        ' , gpsd.satellites
       
-      ##My code here##
-      ##Save lat/lons as coordinates##
-      coordinates = str(gpsd.fix.latitude) + "," + str(gpsd.fix.longitude) + "\n"
-      
-      with open("position_list.txt", "a") as myfile:
-          myfile.write(coordinates)
 
       time.sleep(5) #set to whatever
       
